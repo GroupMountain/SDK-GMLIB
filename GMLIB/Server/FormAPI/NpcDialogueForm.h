@@ -11,6 +11,14 @@ public:
     };
 
 public:
+    std::string                                                                    mDialogue;
+    std::string                                                                    mSceneName;
+    std::string                                                                    mNpcName;
+    nlohmann::ordered_json                                                         mActionJSON;
+    uint64                                                                         mFormRuntimeId;
+    std::function<void(Player* pl, int index, NpcRequestPacket::RequestType type)> mCallback;
+
+public:
     GMLIB_API GMLIB_NpcDialogueForm(std::string npcName, std::string sceneName, std::string dialogue);
 
     GMLIB_NpcDialogueForm() = delete;
