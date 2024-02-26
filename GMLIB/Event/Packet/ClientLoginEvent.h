@@ -6,14 +6,14 @@
 #include "mc/network/NetworkIdentifier.h"
 #include "mc/network/ServerNetworkHandler.h"
 
-namespace GMLIB::Event::PlayerEvent {
+namespace GMLIB::Event::PacketEvent {
 
-class PlayerLoginBeforeEvent : public ll::event::Cancellable<ll::event::Event> {
+class ClientLoginBeforeEvent : public ll::event::Cancellable<ll::event::Event> {
     ServerNetworkHandler const& mServerNetworkHandler;
     NetworkIdentifier const&    mNetworkIdentifier;
 
 public:
-    constexpr explicit PlayerLoginBeforeEvent(
+    constexpr explicit ClientLoginBeforeEvent(
         ServerNetworkHandler const& serverNetworkHandler,
         NetworkIdentifier const&    networkIdentifier
     )
@@ -25,7 +25,7 @@ public:
     GMLIB_API NetworkIdentifier const&    getNetworkIdentifier() const;
 };
 
-class PlayerLoginAfterEvent : public ll::event::Event {
+class ClientLoginAfterEvent : public ll::event::Event {
     ServerNetworkHandler const& mServerNetworkHandler;
     NetworkIdentifier const&    mNetworkIdentifier;
     mce::UUID const             mUuid;
@@ -35,7 +35,7 @@ class PlayerLoginAfterEvent : public ll::event::Event {
     std::string const           mIpAndPort;
 
 public:
-    constexpr explicit PlayerLoginAfterEvent(
+    constexpr explicit ClientLoginAfterEvent(
         ServerNetworkHandler const& serverNetworkHandler,
         NetworkIdentifier const&    networkIdentifier,
         mce::UUID const&            uuid,
@@ -64,4 +64,4 @@ public:
     GMLIB_API void              disConnectClient(std::string reason = "") const;
 };
 
-} // namespace GMLIB::Event::PlayerEvent
+} // namespace GMLIB::Event::PacketEvent
