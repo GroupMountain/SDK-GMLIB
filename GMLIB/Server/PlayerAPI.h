@@ -4,6 +4,7 @@
 #include "GMLIB/Server/LevelAPI.h"
 #include "mc/enums/BossBarColor.h"
 #include "mc/enums/ObjectiveSortOrder.h"
+#include "mc/network/packet/SetTitlePacket.h"
 #include "mc/network/packet/UpdateBlockPacket.h"
 #include "mc/world/actor/player/FullPlayerInventoryWrapper.h"
 #include "mc/world/actor/player/Player.h"
@@ -30,7 +31,7 @@ public:
 
     GMLIB_API static std::unique_ptr<CompoundTag> getPlayerNbt(std::string& serverId); //
 
-    GMLIB_API static std::unique_ptr<CompoundTag> getPlayerNbt(mce::UUID uuid);
+    GMLIB_API static std::unique_ptr<CompoundTag> getPlayerNbt(mce::UUID const& uuid);
 
     GMLIB_API static bool setPlayerNbt(std::string& serverId, CompoundTag& nbt);
 
@@ -44,7 +45,7 @@ public:
 
     GMLIB_API static bool deletePlayerNbt(std::string& serverId);
 
-    GMLIB_API static bool deletePlayerNbt(mce::UUID& uuid);
+    GMLIB_API static bool deletePlayerNbt(mce::UUID const& uuid);
 
     GMLIB_API static std::optional<int> getPlayerScore(std::string& serverId, std::string objective);
 
@@ -84,6 +85,8 @@ public:
     GMLIB_API std::unique_ptr<CompoundTag> getNbt();
 
     GMLIB_API bool setNbt(CompoundTag& nbt);
+
+    GMLIB_API bool setNbtTags(CompoundTag& nbt, const std::vector<std::string>& tags);
 
     GMLIB_API std::optional<int> getScore(std::string objective);
 
@@ -167,6 +170,16 @@ public:
 
     GMLIB_API void sendToast(std::string_view title, std::string_view message);
 
+    GMLIB_API void sendTitle(std::string_view title, SetTitlePacket::TitleType type = SetTitlePacket::TitleType::Title);
+
+    GMLIB_API void sendTitle(
+        std::string_view          title,
+        SetTitlePacket::TitleType type,
+        int                       fadeInDuration,
+        int                       remainDuration,
+        int                       fadeOutDuration
+    );
+
     GMLIB_API void addEffect(
         MobEffect::EffectType effectType,
         int                   duration      = 600,
@@ -227,6 +240,8 @@ public:
         BlockUpdateFlag               flag     = BlockUpdateFlag::All,
         UpdateBlockPacket::BlockLayer layer    = UpdateBlockPacket::BlockLayer::Standard
     );
+
+    GMLIB_API Biome* getBiome();
 
     // ToDo API
     // If you need any API, please open an issue on https://github.com/GroupMountain/GMLIB/issues
