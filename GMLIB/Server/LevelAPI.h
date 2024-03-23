@@ -21,6 +21,8 @@ enum class FillMode : int {
 
 class GMLIB_Level : public Level {
 public:
+    GMLIB_API static GMLIB_Level* getInstance();
+
     GMLIB_API static GMLIB_Level* getLevel();
 
     GMLIB_API static void setClientWeather(WeatherType weather, Player* pl);
@@ -170,4 +172,8 @@ public:
     GMLIB_API bool isTickFreezed();
 
     GMLIB_API void setTickScale(float scale = 1.0f);
+
+    GMLIB_API BlockPos getWorldSpawn();
+
+    GMLIB_API void setWorldSpawn(BlockPos pos);
 };

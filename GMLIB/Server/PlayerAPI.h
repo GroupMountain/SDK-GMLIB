@@ -20,9 +20,13 @@ public:
     using Player::removeEffect;
 
 public:
-    GMLIB_API static std::vector<std::string> getAllUuids(bool includeOfflineSignedId = false);
+    GMLIB_API static std::vector<std::string> getAllServerIds();
+
+    GMLIB_API static std::vector<mce::UUID> getAllUuids(bool includeOfflineSignedId = false);
 
     GMLIB_API static std::unique_ptr<CompoundTag> getUuidDBTag(mce::UUID const& uuid);
+
+    GMLIB_API static bool deleteUuidDBTag(mce::UUID const& uuid);
 
     GMLIB_API static std::string getServerIdFromUuid(mce::UUID const& uuid);
 
@@ -30,13 +34,15 @@ public:
 
     GMLIB_API static bool setOfflineNbt(std::string& serverId, CompoundTag& nbt);
 
-    GMLIB_API static std::unique_ptr<CompoundTag> getPlayerNbt(std::string& serverId); //
+    GMLIB_API static bool createNewPlayerTag(mce::UUID const& uuid, std::string serverId);
+
+    GMLIB_API static std::unique_ptr<CompoundTag> getPlayerNbt(std::string& serverId);
 
     GMLIB_API static std::unique_ptr<CompoundTag> getPlayerNbt(mce::UUID const& uuid);
 
     GMLIB_API static bool setPlayerNbt(std::string& serverId, CompoundTag& nbt);
 
-    GMLIB_API static bool setPlayerNbt(mce::UUID const& uuid, CompoundTag& nbt);
+    GMLIB_API static bool setPlayerNbt(mce::UUID const& uuid, CompoundTag& nbt, bool forceCreate = true);
 
     GMLIB_API static bool
     setPlayerNbtTags(std::string& serverId, CompoundTag& nbt, const std::vector<std::string>& tags);
@@ -47,6 +53,14 @@ public:
     GMLIB_API static bool deletePlayerNbt(std::string& serverId);
 
     GMLIB_API static bool deletePlayerNbt(mce::UUID const& uuid);
+
+    GMLIB_API static ActorUniqueID getPlayerUniqueID(std::string& serverId);
+
+    GMLIB_API static ActorUniqueID getPlayerUniqueID(mce::UUID const& uuid);
+
+    GMLIB_API static std::unordered_map<ActorUniqueID, std::string> getUniqueIdToServerIdMap();
+
+    GMLIB_API static std::unordered_map<ActorUniqueID, mce::UUID> getUniqueIdToUuidMap();
 
     GMLIB_API static std::optional<int> getPlayerScore(std::string& serverId, std::string objective);
 
@@ -241,6 +255,14 @@ public:
     );
 
     GMLIB_API Biome* getBiome();
+
+    GMLIB_API std::pair<BlockPos, DimensionType> getSpawnPoint();
+
+    GMLIB_API void setSpawnPoint(BlockPos pos, DimensionType dimId);
+
+    GMLIB_API void clearSpawnPoint();
+
+    GMLIB_API bool hasSpawnPoint();
 
     // ToDo API
     // If you need any API, please open an issue on https://github.com/GroupMountain/GMLIB/issues
