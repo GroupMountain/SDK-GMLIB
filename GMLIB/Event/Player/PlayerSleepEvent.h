@@ -6,6 +6,7 @@
 namespace GMLIB::Event::PlayerEvent {
 
 class PlayerStartSleepBeforeEvent : public ll::event::Cancellable<ll::event::player::PlayerEvent> {
+protected:
     BlockPos& mBlockPos;
 
 public:
@@ -13,27 +14,28 @@ public:
     : Cancellable(player),
       mBlockPos(pos) {}
 
-    GMLIB_API BlockPos const& getPosition() const;
+    GMLIB_API BlockPos& getPosition() const;
 };
 
 class PlayerStartSleepAfterEvent : public ll::event::player::PlayerEvent {
-    BlockPos& mBlockPos;
-    bool      mResult;
+protected:
+    BlockPos&            mBlockPos;
+    ::BedSleepingResult& mResult;
 
 public:
-    constexpr explicit PlayerStartSleepAfterEvent(Player& player, BlockPos& pos, int result)
+    constexpr explicit PlayerStartSleepAfterEvent(Player& player, BlockPos& pos, BedSleepingResult result)
     : PlayerEvent(player),
-      mBlockPos(pos) {
-        mResult = result == 0 ? true : false;
-    }
+      mBlockPos(pos),
+      mResult(result) {}
 
-    GMLIB_API BlockPos const& getPosition() const;
-    GMLIB_API bool const      getResult() const;
+    GMLIB_API BlockPos&            getPosition() const;
+    GMLIB_API ::BedSleepingResult& getResult() const;
 };
 
 class PlayerStopSleepBeforeEvent : public ll::event::Cancellable<ll::event::player::PlayerEvent> {
-    bool mForcefulWakeUp;
-    bool mUpdateLevelList;
+protected:
+    bool& mForcefulWakeUp;
+    bool& mUpdateLevelList;
 
 public:
     constexpr explicit PlayerStopSleepBeforeEvent(Player& player, bool forcefulWakeUp, bool updateLevelList)
@@ -41,13 +43,14 @@ public:
       mForcefulWakeUp(forcefulWakeUp),
       mUpdateLevelList(updateLevelList) {}
 
-    GMLIB_API bool const isForcefulWakeUp() const;
-    GMLIB_API bool const isUpdateLevelList() const;
+    GMLIB_API bool& isForcefulWakeUp() const;
+    GMLIB_API bool& isUpdateLevelList() const;
 };
 
 class PlayerStopSleepAfterEvent : public ll::event::player::PlayerEvent {
-    bool mForcefulWakeUp;
-    bool mUpdateLevelList;
+protected:
+    bool& mForcefulWakeUp;
+    bool& mUpdateLevelList;
 
 public:
     constexpr explicit PlayerStopSleepAfterEvent(Player& player, bool forcefulWakeUp, bool updateLevelList)
@@ -55,8 +58,8 @@ public:
       mForcefulWakeUp(forcefulWakeUp),
       mUpdateLevelList(updateLevelList) {}
 
-    GMLIB_API bool const isForcefulWakeUp() const;
-    GMLIB_API bool const isUpdateLevelList() const;
+    GMLIB_API bool& isForcefulWakeUp() const;
+    GMLIB_API bool& isUpdateLevelList() const;
 };
 
 } // namespace GMLIB::Event::PlayerEvent
