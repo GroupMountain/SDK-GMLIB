@@ -1,5 +1,5 @@
 #pragma once
-#include "GMLIB/GMLIB.h"
+#include "GMLIB/Macros.h"
 #include <mc/dataloadhelper/DataLoadHelper.h>
 #include <mc/nbt/CompoundTag.h>
 #include <mc/world/actor/Actor.h>
@@ -8,9 +8,19 @@
 
 class GMLIB_CompoundTag : public CompoundTag {
 public:
-    GMLIB_API static DataLoadHelper* getDataLoadHelper();
+    GMLIB_CompoundTag() = default;
 
-    GMLIB_API static std::unique_ptr<CompoundTag> createCompoundTag();
+    GMLIB_CompoundTag(TagMap tags) : CompoundTag(tags) {}
+
+    GMLIB_CompoundTag(std::initializer_list<TagMap::value_type> tags) : CompoundTag(tags) {}
+
+    GMLIB_CompoundTag(GMLIB_CompoundTag const&)            = default;
+    GMLIB_CompoundTag& operator=(GMLIB_CompoundTag const&) = default;
+    GMLIB_CompoundTag(GMLIB_CompoundTag&&)                 = default;
+    GMLIB_CompoundTag& operator=(GMLIB_CompoundTag&&)      = default;
+
+public:
+    GMLIB_API static DataLoadHelper* getDataLoadHelper();
 
     GMLIB_API static std::unique_ptr<CompoundTag> getFromActor(Actor* ac);
 
