@@ -21,6 +21,8 @@ public:
 
     GMLIB_API bool isInRange(Version minVersion, Version maxVersion);
 
+    GMLIB_API std::string toString(bool prefix = true);
+
 public:
     GMLIB_API static bool isValidVersionString(std::string version);
 
