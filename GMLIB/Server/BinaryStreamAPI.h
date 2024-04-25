@@ -16,11 +16,22 @@ public:
 public:
     GMLIB_API void writePacketHeader(MinecraftPacketIds packetId, SubClientId subId = SubClientId::PrimaryClient);
 
-    GMLIB_API void sendTo(Player& pl);
+    GMLIB_API void sendTo(
+        Player&                    pl,
+        ::NetworkPeer::Reliability reliability  = ::NetworkPeer::Reliability::ReliableOrdered,
+        ::Compressibility          compressible = ::Compressibility::Compressible
+    );
 
-    GMLIB_API void sendToClients();
+    GMLIB_API void sendToClients(
+        ::NetworkPeer::Reliability reliability  = ::NetworkPeer::Reliability::ReliableOrdered,
+        ::Compressibility          compressible = ::Compressibility::Compressible
+    );
 
-    GMLIB_API void sendToClients(DimensionType dimId);
+    GMLIB_API void sendToClients(
+        DimensionType              dimId,
+        ::NetworkPeer::Reliability reliability  = ::NetworkPeer::Reliability::ReliableOrdered,
+        ::Compressibility          compressible = ::Compressibility::Compressible
+    );
 
 public:
     GMLIB_API void writeCompoundTag(CompoundTag& data);
