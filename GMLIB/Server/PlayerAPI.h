@@ -6,6 +6,7 @@
 #include "mc/enums/BossBarColor.h"
 #include "mc/enums/BossBarOverlay.h"
 #include "mc/enums/ObjectiveSortOrder.h"
+#include "mc/network/packet/Packet.h"
 #include "mc/network/packet/SetTitlePacket.h"
 #include "mc/network/packet/UpdateBlockPacket.h"
 #include "mc/world/actor/player/FullPlayerInventoryWrapper.h"
@@ -55,6 +56,8 @@ public:
     GMLIB_API static bool deletePlayerNbt(std::string const& serverId);
 
     GMLIB_API static bool deletePlayerNbt(mce::UUID const& uuid);
+
+    GMLIB_API static bool deletePlayer(mce::UUID const& uuid);
 
     GMLIB_API static ActorUniqueID getPlayerUniqueID(std::string const& serverId);
 
@@ -237,8 +240,6 @@ public:
 
     GMLIB_API void hurtPlayer(float damage, std::string const& causeName = "override", Actor* source = nullptr);
 
-    GMLIB_API int clearAllItems();
-
     GMLIB_API void updateClientBlock(
         BlockPos const&               pos,
         uint                          runtimeId,
@@ -281,13 +282,33 @@ public:
 
     GMLIB_API MCRESULT executeCommand(std::string_view command);
 
-    GMLIB_API bool giveItem(ItemStack& item, bool drop = true);
+    GMLIB_API int giveItems(std::vector<ItemStack>& items, bool drop = true);
 
-    // GMLIB_API bool giveItem(std::string name, int count = 1, short aux = 0, bool drop = true);
+    GMLIB_API int giveItem(ItemStack const& item, bool drop = true, bool fixStackSize = true);
 
-    // GMLIB_API int clearItem(std::string name, int count = -1, short aux = -1);
+    GMLIB_API int
+    giveItem(std::string_view name, int count = 1, int data = 0, bool drop = true, bool inventoryLimit = true);
 
-    // GMLIB_API int hasItem(std::string name, short aux = -1);
+    GMLIB_API int clearAllItems();
+
+    GMLIB_API int getItemCount(
+        ItemStack const&                      item,
+        std::function<bool(const ItemStack&)> comparator       = nullptr,
+        bool                                  requireExtraData = false
+    );
+
+    GMLIB_API int getItemCount(std::string_view name, int data);
+
+    GMLIB_API int getItemCount(std::string_view name);
+
+    GMLIB_API int clearItem(
+        ItemStack const&                      item,
+        int                                   clearCount,
+        std::function<bool(const ItemStack&)> comparator       = nullptr,
+        bool                                  requireExtraData = false
+    );
+
+    GMLIB_API int clearItem(std::string_view name, int data = -1, int count = 2147483647);
 
     GMLIB_API bool isInStructureFeature(StructureFeatureType structure);
 
@@ -302,4 +323,6 @@ public:
 
     GMLIB_API std::optional<BlockPos>
               locateNearestStructureFeature(std::string const& structure, bool useNewChunksOnly = false);
+
+    GMLIB_API void sendPacket(Packet& packet);
 };

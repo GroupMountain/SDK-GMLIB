@@ -2,9 +2,11 @@
 #include "GMLIB/Macros.h"
 #include "mc/codebuilder/MCRESULT.h"
 #include "mc/enums/AllExperiments.h"
+#include "mc/network/packet/Packet.h"
 #include "mc/network/packet/SetTitlePacket.h"
 #include "mc/world/level/Level.h"
 #include "mc/world/level/levelgen/structure/StructureFeatureType.h"
+#include "mc/world/level/storage/DBStorage.h"
 #include "mc/world/level/storage/GameRuleId.h"
 
 enum class WeatherType : int {
@@ -27,44 +29,25 @@ public:
 
     GMLIB_API static GMLIB_Level* getLevel();
 
-    GMLIB_API static void setClientWeather(WeatherType weather, Player* pl);
-
-    GMLIB_API static void setClientWeather(WeatherType weather);
-
     GMLIB_API static void setFakeSeed(int64_t fakeSeed);
 
-    GMLIB_API static void setCoResourcePack(bool enabled = true);
+    GMLIB_API static void requireServerResourcePackAndAllowClientResourcePack(bool enabled = true);
 
-    GMLIB_API static void setForceTrustSkin(bool enabled = true);
+    GMLIB_API static void trustAllSkins(bool enabled = true);
 
     GMLIB_API static void addExperimentsRequire(::AllExperiments experiment);
 
-    GMLIB_API static void addEducationEditionRequired();
+    GMLIB_API static void tryEnableEducationEdition();
 
     GMLIB_API static void setForceAchievementsEnabled();
 
-    GMLIB_API static void forceEnableAbilityCommand();
+    GMLIB_API static void tryRegisterAbilityCommand();
 
     GMLIB_API static void setFakeLevelName(std::string_view fakeName);
 
     GMLIB_API static std::map<int, std::string> getAllExperiments();
 
     GMLIB_API static std::map<int, std::string> getAllExperimentsTranslateKeys();
-
-    GMLIB_API static void broadcast(std::string_view message);
-
-    GMLIB_API static void broadcastToast(std::string_view title, std::string_view message);
-
-    GMLIB_API static void
-    broadcastTitle(std::string_view title, SetTitlePacket::TitleType type = SetTitlePacket::TitleType::Title);
-
-    GMLIB_API static void broadcastTitle(
-        std::string_view          title,
-        SetTitlePacket::TitleType type,
-        int                       fadeInDuration,
-        int                       remainDuration,
-        int                       fadeOutDuration
-    );
 
 public:
     GMLIB_API BlockSource* getBlockSource(DimensionType dimid);
@@ -77,7 +60,7 @@ public:
 
     GMLIB_API MCRESULT executeCommand(std::string_view command, DimensionType dimId = 0);
 
-    GMLIB_API bool executeCommandEx(std::string_view command, DimensionType dimId = 0);
+    GMLIB_API std::pair<bool, std::string> executeCommandEx(std::string_view command, DimensionType dimId = 0);
 
     GMLIB_API std::string getLevelName();
 
@@ -155,7 +138,8 @@ public:
         FillMode         mode     = FillMode::Replace
     );
 
-    GMLIB_API int fillBlocks(BlockPos startpos, BlockPos endpos, DimensionType dimId, Block* oldBlock, Block* newBlock);
+    GMLIB_API int
+    fillBlocks(BlockPos const& startpos, BlockPos const& endpos, DimensionType dimId, Block* oldBlock, Block* newBlock);
 
     GMLIB_API int fillBlocks(
         BlockPos const&  startpos,
@@ -203,5 +187,32 @@ public:
         BlockPos const&    pos,
         DimensionType      dimId,
         bool               useNewChunksOnly = false
+    );
+
+    GMLIB_API DBStorage& getDBStorage();
+
+    GMLIB_API void sendPacketToClients(Packet& packet);
+
+    GMLIB_API void sendPacketToDimension(Packet& packet, DimensionType dimId);
+
+    GMLIB_API void sendPacketTo(Packet& packet, Player& player);
+
+    GMLIB_API void setClientWeather(WeatherType weather, Player* pl);
+
+    GMLIB_API void setClientWeather(WeatherType weather);
+
+    GMLIB_API void broadcast(std::string_view message);
+
+    GMLIB_API void broadcastToast(std::string_view title, std::string_view message);
+
+    GMLIB_API void
+    broadcastTitle(std::string_view title, SetTitlePacket::TitleType type = SetTitlePacket::TitleType::Title);
+
+    GMLIB_API void broadcastTitle(
+        std::string_view          title,
+        SetTitlePacket::TitleType type,
+        int                       fadeInDuration,
+        int                       remainDuration,
+        int                       fadeOutDuration
     );
 };
